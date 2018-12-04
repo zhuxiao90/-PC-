@@ -1,0 +1,241 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>天天生鲜-首页</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    <script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/static/js/slide.js"></script>
+</head>
+<body>
+<div class="header_con">
+    <div class="header">
+        <div class="welcome fl">欢迎来到天天生鲜!</div>
+        <div class="fr">
+		{{if compare .userName ""}}
+            <div class="login_btn fl">
+                <a href="/login">登录</a>
+                <span>|</span>
+                <a href="/Register">注册</a>
+            </div>
+		{{else}}
+            <div class="login_btn fl">
+                欢迎您：<em>{{.userName}}</em>
+                <span>|</span>
+                <a href="/login">退出</a>
+            </div>
+		{{end}}
+            <div class="user_link fl">
+                <span>|</span>
+                <a href="/user/info">用户中心</a>
+                <span>|</span>
+                <a href="/user/cart">我的购物车</a>
+                <span>|</span>
+                <a href="user_center_order.html">我的订单</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="search_bar clearfix">
+    <a href="/index" class="logo fl"><img src="/static/images/logo.png"></a>
+    <div class="search_con fl">
+        <input type="text" class="input_text fl" name="" placeholder="搜索商品">
+        <input type="button" class="input_btn fr" name="" value="搜索">
+    </div>
+    <div class="guest_cart fr">
+        <a href="#" class="cart_name fl">我的购物车</a>
+        <div class="goods_count fl" id="show_count">1</div>
+    </div>
+</div>
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>	
+				<span></span>			
+				<ul class="subnav">
+					{{range .GoodsType}}
+					<li><a href="/user/goodsList?typeId={{.Id}}" class="{{.Logo}}">{{.Name}}</a></li>
+					{{end}}
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="#">全部分类</a>
+		<span>></span>
+		<a href="#">新鲜水果</a>
+		<span>></span>
+		<a href="#">商品详情</a>
+	</div>
+
+	<div class="goods_detail_con clearfix">
+		<div class="goods_detail_pic fl"><img src="http://192.168.42.188:8888/{{.GoodsSKU.Image}}"></div>
+
+		<div class="goods_detail_list fr">
+			<h3>{{.GoodsSKU.Name}}</h3>
+			<p>{{.GoodsSKU.Desc}}</p>
+			<div class="prize_bar">
+				<span class="show_pirze">¥<em>{{.GoodsSKU.Price}}</em></span>
+				<span class="show_unit">单  位：{{.GoodsSKU.Unite}}</span>
+			</div>
+			<div class="goods_num clearfix">
+				<div class="num_name fl">数 量：</div>
+				<div class="num_add fl">
+					<input type="text" class="num_show fl" value="1">
+					<a href="javascript:;" class="add fr">+</a>
+					<a href="javascript:;" class="minus fr">-</a>	
+				</div> 
+			</div>
+			<div class="total">总价：<em>16.80 元</em></div>
+			<div class="operate_btn">
+				<a href="javascript:;" class="buy_btn">立即购买</a>
+				<a href="javascript:;" class="add_cart" id="add_cart" goodsId="{{.GoodsSKU.Id}}">加入购物车</a>
+			</div>
+		</div>
+	</div>
+<div class="add_jump"></div>
+    <script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"> </script>
+<script type="text/javascript">
+        Countitleprice();
+        function Countitleprice() {
+            price =$('.show_pirze').children('em').text();
+            count =$('.num_show').val();
+            price=parseFloat(price);
+            count=parseInt(count);
+            totilprice=price*count;
+            $('.total').children('em').text(totilprice.toFixed(2)+'元');
+        }
+		$('.add').click(function () {
+			count =$('.num_show').val();
+			count=parseInt(count);
+			count=count+1;
+            $('.num_show').val(count);
+            Countitleprice();
+        });
+        $('.minus').click(function () {
+			count=$('.num_show').val();
+			count=parseInt(count);
+			count=count-1;
+			if (count < 1){
+			    count=1
+			}
+			$('.num_show').val(count);
+            Countitleprice();
+        });
+	   $('.num_show').blur(function () {
+	       count=$('.num_show').val();
+		   if (count !=parseInt(count)||parseInt(count) < 1){
+		       count=1
+		   }
+           $('.num_show').val(count);
+           Countitleprice();
+       })
+        var $add_x = $('#add_cart').offset().top;
+        var $add_y = $('#add_cart').offset().left;
+
+        var $to_x = $('#show_count').offset().top;
+        var $to_y = $('#show_count').offset().left;
+
+        $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
+        $('#add_cart').click(function() {
+            goodsId = $('#add_cart').attr('goodsId');
+            count = $('.num_show').val();
+
+            param = {"goodsId": goodsId, "count": count};
+
+            $.post('/user/addCart', param, function (data) {
+               if (data.res==5){
+                   $(".add_jump").stop().animate({
+                               'left': $to_y + 7,
+                               'top': $to_x + 7
+                           },
+                           "fast", function () {
+                               $(".add_jump").fadeOut('fast', function () {
+                                   $('#show_count').html(data.count);
+                               });
+
+                           });
+               }else {
+                   alert(data.errmsg)
+               }
+            });
+
+        })
+
+
+</script>
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+					{{range .newGoods}}
+					<li>
+						<a href="/goodsDetail?id={{.Id}}"><img src="http://192.168.42.188:8888/{{.Image}}"></a>
+						<h4><a href="/goodsDetail?id={{.Id}}">{{.Name}}</a></h4>
+						<div class="prize">￥{{.Price}}</div>
+					</li>
+							{{end}}
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<ul class="detail_tab clearfix">
+				<li class="active">{{.GoodsSKU.Desc}}</li>
+				<li>评论</li>
+			</ul>
+
+			<div class="tab_content">
+				<dl>
+					<dt>详细描述：</dt>
+					<dd> {{.GoodsSKU.Goods.Detail}}</dd>
+				</dl>
+			</div>
+
+		</div>
+	</div>
+<div class="footer">
+    <div class="foot_link">
+        <a href="#">关于我们</a>
+        <span>|</span>
+        <a href="#">联系我们</a>
+        <span>|</span>
+        <a href="#">招聘人才</a>
+        <span>|</span>
+        <a href="#">友情链接</a>
+    </div>
+    <p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
+    <p>电话：010-****888    京ICP备*******8号</p>
+</div>
+<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+    BCSlideshow('focuspic');
+    var oFruit = document.getElementById('fruit_more');
+    var oShownum = document.getElementById('show_count');
+
+    var hasorder = localStorage.getItem('order_finish');
+
+    if(hasorder)
+    {
+        oShownum.innerHTML = '2';
+    }
+
+    oFruit.onclick = function(){
+        window.location.href = 'list.html';
+    }
+</script>
+</body>
+</html>
